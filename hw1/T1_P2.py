@@ -66,10 +66,10 @@ def plot_knn_preds(k):
     plt.savefig(title + '.png')
     plt.show()
 
-for alpha in (0.1, 10, 100):
+for alpha in (0.1, 3, 10):
     # TODO: Print the loss for each chart.
     plot_kernel_preds(alpha)
 
-for k in (1, 4, 15):
+for k in (1, 5, 15):
     # TODO: Print the loss for each chart.
     plot_knn_preds(k)
