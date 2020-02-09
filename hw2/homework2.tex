@@ -78,8 +78,6 @@ Please submit your \textbf{\LaTeX\ file and code files to the Gradescope assignm
 
 You can use a \textbf{maximum of 2 late days} on this assignment.  Late days will be counted based on the latest of the two submissions. \\
 
-\newpage
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Problem 1
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -116,7 +114,9 @@ x, y
    (for each step). These parameters, while not perfect, will ensure your code
    runs in a reasonable amount of time. The emphasis of this problem is on
    capturing the bias-variance trend, so don't worry the exact details of the
-   models as long as this trend is captured.
+   models as long as this trend is captured. Hint: if you run into $\log(0)$ issues
+   in the logistic loss function, you can use a small $\epsilon=0.000001$ to take care of it.
+
 
 \item Create three plots, one for each basis. On each plot, first plot the
   the data points as given above, then plot the prediction functions

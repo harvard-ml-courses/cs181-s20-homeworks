@@ -8,6 +8,7 @@ import matplotlib.colors as c
 import matplotlib.patches as mpatches
 from T2_P3_LogisticRegression import LogisticRegression
 from T2_P3_GaussianGenerativeModel import GaussianGenerativeModel
+from T2_P3_KNNModel import KNNModel
 
 
 # These are the hyperparameters to the classifiers. You may need to
