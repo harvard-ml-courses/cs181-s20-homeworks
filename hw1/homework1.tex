@@ -98,7 +98,6 @@ over squared Mahalanobis distances
 where $W$ is a symmetric $D$ by $D$ matrix.  Intuitively, introducing
 the weight matrix $W$ allows for different dimensions to matter
 differently when defining similarity.
-
 \begin{enumerate}
 
 \item Let $\{(x_n,y_n)\}_{n=1}^N$ be our training data set.  Suppose
@@ -111,7 +110,7 @@ differently when defining similarity.
   $W$ has three parameters: $W_{11}$, $W_{22}$, and $W_{12} = W_{21}$.
   Expand the formula for the loss function to be a function of these
   three parameters.
-
+  
 \item Consider the following data set:
 \begin{csv}
 x1 , x2 , y 
@@ -143,21 +142,136 @@ W_3 = \alpha \begin{bmatrix}
 \end{bmatrix}
 \end{equation*} 
 with $\alpha = 10$. Write some Python code to compute the loss with respect
-to each kernel for the dataset provided above. Which kernel does best?  Why?  How does the choice of $\alpha$ affect the loss?  
-
+to each kernel for the dataset provided above. Which kernel does best?  Why?  How does the choice of $\alpha$ affect the loss? 
 \item Derive the gradients with respect to each of the parameters in
   $W$.
-
+  
 \item Bonus:  Code up a gradient descent to
   optimize the kernel for the data set above.  Start your gradient
   descent from $W_1$.  Report on what you find.\\
   Gradient descent is discussed in Section 3.4 of the cs181-textbook notes and Section 5.2.4 of Bishop, and will be covered later in the course! 
-
 \end{enumerate}
-  
+
 \end{problem}  
-
-
+\begin{enumerate}
+    \item 
+    \begin{equation*}
+    \mcL(W) = \sum_{i = 1}^{N} (y_i - \frac{ \sum_{n\neq i} \exp(-(x_n-x_i) W (x_n-x_i)^T ) y_n  }{ \sum_{n\neq i} \exp(-(x_n-x_i) W (x_n-x_i)^T ) })^2
+  \end{equation*}
+  
+  \bigskip
+  \item
+  \begin{equation*}
+    \mcL(W) = \sum_{i = 1}^{N} (y_i - \frac{ \sum_{n\neq i} \exp(-(x_n-x_i) W (x_n-x_i)^T ) y_n  }{ \sum_{n\neq i} \exp(-(x_n-x_i) W (x_n-x_i)^T ) })^2
+  \end{equation*}
+  \begin{equation*}
+    \mcL(W) = \sum_{i = 1}^{N} (y_i - \frac{ \sum_{n\neq i} \exp(-(x_n-x_i) 
+    \begin{bmatrix}
+    W_{11} & W_{12}\\
+    W_{21} & W_{22}
+    \end{bmatrix} 
+    \begin{bmatrix}
+    x_{n1} - x_{i1}\\
+    x_{n2} - x_{i2}
+    \end{bmatrix} ) y_n  }{ \sum_{n\neq i} \exp(-(x_n-x_i) W (x_n-x_i)^T ) })^2
+  \end{equation*}
+    \begin{equation*}
+    \mcL(W) = \sum_{i = 1}^{N} (y_i - \frac{ \sum_{n\neq
+    i} \exp(-
+    \begin{bmatrix}
+    x_{n1} - x_{i1} & x_{n2} - x_{i2}
+    \end{bmatrix}
+    \begin{bmatrix}
+    W_{11}(x_{n1} - x_{i1}) + W_{12}(x_{n2} - x_{i2})\\
+    W_{21}(x_{n1} - x_{i1}) + W_{22}(x_{n2} - x_{i2})
+    \end{bmatrix} ) y_n  }{ \sum_{n\neq i} \exp(-(x_n-x_i)
+    W (x_n-x_i)^T ) })^2
+  \end{equation*}
+  \begin{equation*}
+    \mcL(W) = \sum_{i = 1}^{N} (y_i - \frac{ \sum_{n\neq
+    i} \exp(-W_{11}(x_{n1} - x_{i1})^2 - 2 \cdot
+    W_{12}(x_{n1} - x_{i1})(x_{n2} - x_{i2}) -
+    W_{22}(x_{n2} - x_{i2})^2) y_n  }{ \sum_{n\neq i}
+    \exp(-(x_n-x_i) W (x_n-x_i)^T ) })^2 
+    \end{equation*}
+  \begin{equation*}
+    \mcL(W) = \sum_{i = 1}^{N} (y_i - \frac{ \sum_{n\neq
+    i} \exp(-W_{11}(x_{n1} - x_{i1})^2 - 2 \cdot
+    W_{12}(x_{n1} - x_{i1})(x_{n2} - x_{i2}) -
+    W_{22}(x_{n2} - x_{i2})^2) y_n  }{ \sum_{n\neq i}
+    \exp(-W_{11}(x_{n1} - x_{i1})^2 - 2 \cdot
+    W_{12}(x_{n1} - x_{i1})(x_{n2} - x_{i2}) -
+    W_{22}(x_{n2} - x_{i2})^2) })^2 
+    \end{equation*}
+    
+    \bigskip
+    \item
+    $\mcL(W_1) = 0.338216157301$\newline
+    $\mcL(W_2) = 2.22638231229$\newline
+    $\mcL(W_3) = 0.0248476378043$\newline\newline
+    The $\mcL(W_3)$ kernel does best. It results in the lowest loss of the kernels given. In the case of the $\mcL(W_3)$ kernel increasing $\alpha$ decreases the loss and decreasing $\alpha$ increases the loss.
+    
+    \bigskip
+    \item
+    \begin{equation*}
+    \frac{\partial \mcL(W)}{\partial W_{11}} = \sum_{i = 1}^{N} (y_i - \frac{ \sum_{n\neq
+    i} \exp(-W_{11}(x_{n1} - x_{i1})^2 - 2 \cdot
+    W_{12}(x_{n1} - x_{i1})(x_{n2} - x_{i2}) -
+    W_{22}(x_{n2} - x_{i2})^2) y_n  }{ \sum_{n\neq i}
+    \exp(-W_{11}(x_{n1} - x_{i1})^2 - 2 \cdot
+    W_{12}(x_{n1} - x_{i1})(x_{n2} - x_{i2}) -
+    W_{22}(x_{n2} - x_{i2})^2) })^2 
+    \end{equation*}
+    \begin{equation*}
+    \frac{\partial \mcL(W)}{\partial W_{11}} = \sum_{i = 1}^{N} (-\frac{ \sum_{n\neq
+    i} y_n \cdot (x_{n1} - x_{i1})^2 \exp(-W_{11}(x_{n1} - x_{i1})^2 - 2 \cdot
+    W_{12}(x_{n1} - x_{i1})(x_{n2} - x_{i2}) -
+    W_{22}(x_{n2} - x_{i2})^2)}{ \sum_{n\neq i}
+    (x_{n1} - x_{i1})^2 \exp(-W_{11}(x_{n1} - x_{i1})^2 - 2 \cdot
+    W_{12}(x_{n1} - x_{i1})(x_{n2} - x_{i2}) -
+    W_{22}(x_{n2} - x_{i2})^2) })^2 
+    \end{equation*}
+\newline
+    \begin{equation*}
+    \frac{\partial \mcL(W)}{\partial W_{12}} = \sum_{i = 1}^{N} (y_i - \frac{ \sum_{n\neq
+    i} \exp(-W_{11}(x_{n1} - x_{i1})^2 - 2 \cdot
+    W_{12}(x_{n1} - x_{i1})(x_{n2} - x_{i2}) -
+    W_{22}(x_{n2} - x_{i2})^2) y_n  }{ \sum_{n\neq i}
+    \exp(-W_{11}(x_{n1} - x_{i1})^2 - 2 \cdot
+    W_{12}(x_{n1} - x_{i1})(x_{n2} - x_{i2}) -
+    W_{22}(x_{n2} - x_{i2})^2) })^2 
+    \end{equation*}
+    \begin{equation*}
+    \begin{split}
+    &\frac{\partial \mcL(W)}{\partial W_{12}} =\\ &= \sum_{i = 1}^{N} (-\frac{ \sum_{n\neq
+    i} y_n \cdot (x_{n1} - x_{i1})(x_{n2} - x_{i2}) \exp(-W_{11}(x_{n1} - x_{i1})^2 - 2 \cdot
+    W_{12}(x_{n1} - x_{i1})(x_{n2} - x_{i2}) -
+    W_{22}(x_{n2} - x_{i2})^2)}{ \sum_{n\neq i}
+    (x_{n1} - x_{i1})(x_{n2} - x_{i2}) \exp(-W_{11}(x_{n1} - x_{i1})^2 - 2 \cdot
+    W_{12}(x_{n1} - x_{i1})(x_{n2} - x_{i2}) -
+    W_{22}(x_{n2} - x_{i2})^2) })^2 
+    \end{split}
+    \end{equation*}
+\newline
+    \begin{equation*}
+    \frac{\partial \mcL(W)}{\partial W_{22}} =  \sum_{i = 1}^{N} (y_i - \frac{ \sum_{n\neq
+    i} \exp(-W_{11}(x_{n1} - x_{i1})^2 - 2 \cdot
+    W_{12}(x_{n1} - x_{i1})(x_{n2} - x_{i2}) -
+    W_{22}(x_{n2} - x_{i2})^2) y_n  }{ \sum_{n\neq i}
+    \exp(-W_{11}(x_{n1} - x_{i1})^2 - 2 \cdot
+    W_{12}(x_{n1} - x_{i1})(x_{n2} - x_{i2}) -
+    W_{22}(x_{n2} - x_{i2})^2) })^2 
+    \end{equation*}
+    \begin{equation*}
+    \frac{\partial \mcL(W)}{\partial W_{22}} = \sum_{i = 1}^{N} (-\frac{ \sum_{n\neq
+    i} y_n \cdot (x_{n2} - x_{i2})^2 \exp(-W_{11}(x_{n1} - x_{i1})^2 - 2 \cdot
+    W_{12}(x_{n1} - x_{i1})(x_{n2} - x_{i2}) -
+    W_{22}(x_{n2} - x_{i2})^2)}{ \sum_{n\neq i}
+   (x_{n2} - x_{i2})^2 \exp(-W_{11}(x_{n1} - x_{i1})^2 - 2 \cdot
+    W_{12}(x_{n1} - x_{i1})(x_{n2} - x_{i2}) -
+    W_{22}(x_{n2} - x_{i2})^2) })^2 
+    \end{equation*}
+\end{enumerate}
 \newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -188,20 +302,53 @@ nearest-neighbors.  Recall that kNN uses a predictor of the form
   the kNN predictor with $\alpha = 1$, $k=\{1,5,15\}$.  Print the least squares loss for each of the 6 plots.
   
   You may choose to use some starter Python code to create your plots provided in \verb|T1_P2.py|.  Please \textbf{write your own implementation of kNN} for full credit.  Do not use external libraries to find nearest neighbors.
-  
+ 
 \item Do any of the kernel-based regression plots look like the 1NN?
   The 15NN?  Why or why not?
 
 \item Do you think that there will always be a version of kernel
   regression (based on varying $\alpha$) that looks like a kNN for any
   $k$, for a fixed distance or kernel function?  Why or why not?
-  
-\item Why did we not vary $\alpha$ for the kNN approach?    
+\item Why did we not vary $\alpha$ for the kNN approach?  
 
 \end{enumerate}
 
 \end{problem}
-
+\begin{enumerate}
+    \item \hspace{2cm} \newline
+\includegraphics[scale=.40]{hw1/figure_1.png}
+\includegraphics[scale=.40]{hw1/figure_1-1.png}
+\newline
+\begin{center}
+    Loss  =  1.83997125409 \hspace{5cm} Loss = 0.620016154545
+\end{center}
+\includegraphics[scale=.40]{hw1/figure_1-2.png}
+\includegraphics[scale=.40]{hw1/figure_1-3.png}
+\newline
+\begin{center}
+    Loss  =  0.390012935856 \hspace{6cm} Loss  =  8.697
+\end{center}
+\includegraphics[scale=.40]{hw1/figure_1-4.png}
+\includegraphics[scale=.40]{hw1/figure_1-5.png}
+\begin{center}
+    Loss  =  5.751568 \hspace{5cm} Loss  =  1.94771377778
+\end{center}
+    
+    \bigskip
+    \item
+    None look like the 1NN.
+    The 15NN looks like the kernel based regression plot where $\alpha$ = 0.1 \newline
+    The 1NN plot only takes into account only 1 closest neighbor, whereas all the kernel preictions factor in all neighbors, so they will look very different. However, the 15NN takes into account all the neighbors of a given point for our given data set, which is somewhat similar to how the kernel regression works. And since that is the case the 15NN looks like the kernel based regression plot where $\alpha$ = 0.1.
+    
+    \bigskip
+    \item
+    Most likely by varying $\alpha$ there will always be some kernel regression that is very very similar to kNN, for any k. This is likely because of the fact that they both compute distance similarly, at least in our implementation, and even though the mathematical manipulation is different at the end of it the kernel regression function can be mathematically massaged to appear very similar to the kNN function.
+    
+    \bigskip
+    \item
+    We did not vary $\alpha$ because it doesn't matter for kNN. This is because the $\alpha$ is only used to calculate distance. And the relative order of the distances stay the same no matter which alpha is chosen, the scaling is just different. And once the order of the nearest neighbors is established the $\alpha$ is irrelevant for for calculating the kNN. And as such we did not need to vary $\alpha$ becuase it has no overall effect.
+    
+\end{enumerate}
 
 \newpage 
 
@@ -245,7 +392,89 @@ Assume scalar $x$, $\epsilon$, $w$, and $y$, and that $x$ is independent of $\ep
 \end{enumerate}
 
 \end{problem}
-
+\begin{enumerate}
+    \item
+    \begin{equation*}
+       \Sigma_{yx} = E_{x, y}[yx] 
+    \end{equation*}
+    \begin{equation*}
+       \Sigma_{yx} = E[(wx + \epsilon) x]
+    \end{equation*}
+    \begin{equation*}
+       \Sigma_{yx} = E[wx^2 + \epsilon x]
+    \end{equation*}
+    \begin{equation*}
+       \Sigma_{yx} = E[wx^2] + E[\epsilon x]
+    \end{equation*}
+    \begin{equation*}
+       \Sigma_{yx} = wE[x^2] + E[\epsilon]E[x]
+    \end{equation*}
+    \begin{equation*}
+       \Sigma_{yx} = w(Var[x] + (E[x])^2) + E[\epsilon]E[x]
+    \end{equation*}
+    \begin{equation*}
+       \Sigma_{yx} = w\Sigma_{x}
+    \end{equation*}
+    
+    \bigskip
+    \item
+    \begin{equation*}
+       E_{x, y}[yx | \{(x_n,y_n)\}_{n=1}^N] = \frac{1}{N} \sum_{n=1}^{N} x_n y_n
+    \end{equation*}
+    
+    \bigskip
+    \item
+    \begin{equation*}
+        \mcL(w) = \sum_{n = 1}^{N} (y_n - f(w))^2
+    \end{equation*}
+    \begin{equation*}
+        \frac{1}{N}\mcL(w) = \frac{1}{N}\sum_{n = 1}^{N} (y_n - f(w))^2
+    \end{equation*}
+    \begin{align*}
+        \frac{1}{N} \mcL(w) = \frac{1}{N} \sum_{n = 1}^{N} (y_n - f(w))^2 &&
+        E(w) = \sum_{w} P(W = w) w
+    \end{align*}
+    \begin{equation*}
+        \frac{1}{N}\mcL(w) = E[(y - wx_n)^2]
+    \end{equation*}
+    \begin{equation*}
+        \mcL(w) = E[(y^2 - 2 \cdot y w x + w^2x^2)^2]
+    \end{equation*}
+    \begin{equation*}
+        \mcL(w) = E[y^2 - 2 \cdot y w x + w^2x^2]
+    \end{equation*}
+    \begin{equation*}
+        \mcL(w) = E[y^2] - 2 \cdot E[y w x] + E[w^2x^2]
+    \end{equation*}
+    \begin{equation*}
+        \frac{\partial \mcL(w)}{\partial w} = E[y^2] - 2 \cdot E[y w x] + E[w^2x^2]
+    \end{equation*}
+    \begin{equation*}
+        0 = -2 \cdot E[yx] + 2w \cdot E[x^2]
+    \end{equation*}
+    \begin{equation*}
+        w^* = \frac{E[yx]}{E[x^2]} = \frac{\Sigma_{yx}}{\Sigma_{x}}
+    \end{equation*}
+    Yes it does. Since x and y are scalars, this ends up being the exact same equation derived in section 2.6.
+    
+    \bigskip
+    \item
+    Instead of having to re-derive the entire equation above we can start with the second to last equation from the previous problem as it is very similar.
+    
+    \begin{equation*}
+        w^* = \frac{E[yx]}{E[x^2]}
+    \end{equation*}
+    \begin{equation*}
+        w^* = \frac{E[yx]}{Var[x] + (E[x])^2}
+    \end{equation*}
+    \begin{equation*}
+        w^* = \frac{\Sigma_{yx}}{\Sigma_{x} + \mu_x^2}
+     \end{equation*}
+    
+    \bigskip
+    \item
+    Yes, the formula would still hold if the process generating was not Gaussian. All the values the formula relies upon to calculate $w^*$ remain unchanged even though the overall distribution may be different. 
+\end{enumerate}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Problem 4
@@ -311,7 +540,49 @@ Given the quality of this fit, do you believe that the number of sunspots contro
 
 \end{problem}
 
+\begin{enumerate}
+    \item
+    \begin{enumerate}
+        \item
+        
+        Residual Sum of Squares Error  =  424.870063686\newline
+        \includegraphics[scale=.40]{hw1/P4pics/figure_1-1.png}
+        
+        \bigskip
+        \item
+        Residual Sum of Squares Error  =  54.2730966167\newline
+        \includegraphics[scale=.40]{hw1/P4pics/figure_1-2.png}
+        
+        \bigskip
+        \item
+        Residual Sum of Squares Error  =  1082.80885599\newline
+        \includegraphics[scale=.40]{hw1/P4pics/figure_1-3.png}
 
+        \bigskip
+        \item
+        Residual Sum of Squares Error  =  45.3775002463\newline
+        \includegraphics[scale=.40]{hw1/P4pics/figure_1-4.png}
+    \end{enumerate} 
+    \bigskip
+    \item
+     \begin{enumerate}
+        \item\addtocounter{enumii}{1}
+        Residual Sum of Squares Error  =  2.3527618726e-25\newline
+        \includegraphics[scale=.40]{hw1/P4-2pics/figure_1.png}
+        
+        \bigskip
+        \item
+        Residual Sum of Squares Error  =  8996.36895843\newline
+        \includegraphics[scale=.40]{hw1/P4-2pics/figure_1-1.png}
+        
+        \bigskip
+        \item
+        Residual Sum of Squares Error  =  143.942491929\newline
+        \includegraphics[scale=.40]{hw1/P4-2pics/figure_1-2.png}
+
+        \bigskip\bigskip Base a provides the "best" fit. Taking into account the quality of the model found, I do not believe that he number of sunspots controls the number of Republicans in the senate.
+    \end{enumerate}
+\end{enumerate}
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -320,10 +591,10 @@ Given the quality of this fit, do you believe that the number of sunspots contro
 \subsection*{Name}
 
 \subsection*{Collaborators and Resources}
-Whom did you work with, and did you use any resources beyond cs181-textbook and your notes?
+Whom did you work with, and did you use any resources beyond cs181-textbook and your notes? \newline No one and no.
 
 \subsection*{Calibration}
-Approximately how long did this homework take you to complete (in hours)? 
+Approximately how long did this homework take you to complete (in hours)? \newline 25 hours.
 
 \end{document}
 
