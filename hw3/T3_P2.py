@@ -26,8 +26,8 @@ tb2 = torch.tensor(b2, requires_grad=True)
 tX = torch.tensor(X)
 ty = torch.tensor(y)
 
-# CAREFUL: if you run this multiple times w/o running the above cell,
-# the gradients will accumulate in the grad variables. Rerun the above cell
+# CAREFUL: if you run the code below w/o running the code above,
+# the gradients will accumulate in the grad variables. Rerun the code above
 # to reset
 
 # torch implementation
