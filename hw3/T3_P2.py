@@ -9,10 +9,10 @@ H = 75
 
 # generate data
 np.random.seed(181)
-W1 = np.random.random((H, M))
-b1 = np.random.random(H)
-W2 = np.random.random(H)
-b2 = np.random.random(1)
+W1 = np.random.normal(scale=0.1, size=(H, M))
+b1 = np.random.normal(scale=0.1, size=H)
+W2 = np.random.normal(scale=0.1, size=H)
+b2 = np.random.normal(scale=0.1, size=1)
 
 X = np.random.random((N, M))
 y = np.random.randint(0,2,size=N).astype('float')
