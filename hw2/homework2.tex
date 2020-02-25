@@ -141,6 +141,14 @@ x, y
 \newpage
 
 \subsection*{Solution}
+\begin{enumerate}
+    \item 
+    \item \includegraphics[scale=0.6]{Plot for Basis 1.png}
+    \includegraphics[scale=0.6]{Basis 2 Plot.png}
+    \includegraphics[scale=0.6]{Basis 3 Plot.png}
+    \item Basis 1 seems to not fit the training data very well (underfitting) and therefore has high bias and low variance. Basis 2 seems to have a pretty good balance of bias and variance, because it seems to be fitting most of our training data well but also fits a line that seems uncomplicated and could fit well to future, similar data. We would want to use regularization and/or cross validation or Bayesian modeling average to tune our parameters and see if this is a good model. Basis 3 has high variance and is overfit to our data. You can see this because the line goes through every single point. Additionally,as we refit the data with our model, we see a lot of variation in the lines. 
+    \item We would expect to see a decrease in variance for a high variance model like basis 3. As we get more data, our prediction gets closer to the true data. The closer we are to true data, we minimize both bias and variance. However, for a simple model like in basis 1, increasing data will not change the model as it has low variance.
+\end{enumerate}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Problem 2
@@ -221,6 +229,110 @@ $\boldX^{-\top} := (\boldX^{\top})^{-1}$
 
 
 \subsection*{Solution}
+
+\begin{enumerate}
+    \item 
+    \begin{equation}
+    \begin{split}
+         -\ln p(D ; \bpi) &= -\ln p(\{(\boldx_i,\boldy_i)\}_{i=1}^n; \bpi)\\
+        &= -\ln \displaystyle\prod_{i=1}^{N} p(\boldx_i, \boldy_i; \bpi)\\
+        &= -\ln \displaystyle\prod_{i=1}^{N} p (\boldx_i | \boldy_i) p (\boldy_i ; \bpi) \\
+        &= -\sum_{i=1}^{N}(\ln p(\boldx_i | \boldy_i) + \ln p (\boldy_i ; \bpi)) \\
+        &= -\sum_{i=1}^{N}(\ln \displaystyle\prod_{k=1}^{C} p(\boldx_i | \boldy_i = C_k )^{\mathbb{I}\{y_i = C_k\}} + \ln \displaystyle\prod_{k=1}^{C} p (\boldy_i = C_k)^{\mathbb{I}\{y_i = C_k\}}) \\
+        &= -\sum_{i=1}^{N}(\sum_{k=1}^{C} \ln p(\boldx_i | \boldy_i = C_k)^{\mathbb{I}\{y_i = C_k\}} + \sum_{k=1}^{C} \ln p (\boldy_i = C_k ; \bpi_k)^{\mathbb{I}\{y_i = C_k\}}) \\
+        &= -\sum_{i=1}^{N} \sum_{k=1}^{C} (\ln p(\boldx_i | \boldy_i = C_k)^{\mathbb{I}\{y_i = C_k\}} + \ln p (\boldy_i = C_k ; \bpi_k)^{\mathbb{I}\{y_i = C_k\}}) \\
+        &= -\sum_{i=1}^{N} \sum_{k=1}^{C} (\mathbb{I}\{y_i = C_k\} (\ln p(\boldx_i | \boldy_i = C_k) + \ln p (\boldy_i = C_k ; \bpi_k)) \\
+        &= -\sum_{i=1}^{N} \sum_{k=1}^{C} y_{ik} (\ln p(\boldx_i | \boldy_i = C_k) + \ln \bpi_k) \\
+    \end{split}
+    \end{equation}
+    \item    
+    Take the derivative with respect to $\pi_k$
+    \begin{equation}
+        \begin{split}
+            L(\boldx, \lambda) &=  f(\boldx) + \lambda g(\boldx) \\
+            &= f(\boldx) + \lambda (\sum_k\pi_k - 1) \\
+            &= (-\sum_{i=1}^{N} \sum_{k=1}^{C} y_{ik} (\ln p(\boldx_i | \boldy_i = C_k; \bpi_k) + \ln \bpi_k)) + \lambda (\sum_k\pi_k - 1)\\
+            \frac{\partial L(\boldx, \lambda)}{\partial \lambda} &= \frac{\partial}{\partial \lambda}((-\sum_{i=1}^{N} \sum_{k=1}^{C} y_{ik} (\ln p(\boldx_i | \boldy_i = C_k; \bpi_k) + \ln \bpi_k)) + \lambda (\sum_k\pi_k - 1)) \\
+            \frac{\partial L(\boldx, \lambda)}{\partial \lambda} &= \frac{\partial}{\partial \lambda}( \lambda (\sum_k\pi_k - 1)) \\
+            \frac{\partial L(\boldx, \lambda)}{\partial \lambda} &= \sum_k\pi_k - 1 \\
+            0 &= \sum_k\pi_k - 1 \\
+            1 &= \sum_k\pi_k \\
+        \end{split}
+    \end{equation}
+    Take the derivative with respect to $\pi_k$
+    \begin{equation}
+        \begin{split}
+            \frac{\partial L(\boldx, \lambda)}{\partial \bpi_k} &= \frac{\partial}{\partial \bpi_k}((-\sum_{i=1}^{N} \sum_{k=1}^{C} y_{ik} (\ln p(\boldx_i | \boldy_i = C_k; \bpi_k) + \ln \bpi_k)) + \lambda (\sum_k\pi_k - 1)) \\
+            \frac{\partial L(\boldx, \lambda)}{\partial \bpi_k} &= \frac{\partial}{\partial \bpi_k}((-\sum_{i=1}^{N} \sum_{k=1}^{C} y_{ik}( \ln \bpi_k)) + \lambda (\sum_k\pi_k - 1)) \\
+             &= -\sum_{i=1}^{N} \sum_{k=1}^{C} \frac{y_{ik}}{\bpi_k} + \lambda (1) \\
+             &= -\sum_{i=1}^{N}  \frac{y_{ik}}{\bpi_k} + \lambda \\
+             \sum_{i=1}^{N}  \frac{y_{ik}}{\bpi_k} &=  \lambda \\             \frac{1}{\bpi_k}\sum_{i=1}^{N}  y_{ik} &=  \lambda \\
+             \bpi_k &= \frac{\sum_{i=1}^{N}  y_{ik}}{\lambda} \\
+        \end{split}
+    \end{equation}
+    to solve for $\lambda$ we can:
+    \begin{equation}
+        \begin{split}
+            1 &= \sum_k\frac{\sum_{i=1}^{N}  y_{ik}}{\lambda}\\
+            1 &= \sum_k\sum_{i=1}^{N}  y_{ik}\frac{1}{\lambda}\\
+            \lambda &= \sum_k\sum_{i=1}^{N}  y_{ik}\\
+            \lambda &= n\\
+        \end{split}
+    \end{equation}
+    Plugging this back into equation (3), we get the final solution:
+    \begin{equation}
+        \begin{split}
+            \bpi_k &= \frac{\sum_{i=1}^{N}  y_{ik}}{n} \\
+        \end{split}
+    \end{equation}
+    \item
+    \begin{equation}
+        \begin{split}
+            &= -\sum_{i=1}^{N} \sum_{k=1}^{C} y_{ik} (\ln p(\boldx_i | \boldy_i = C_k; \bpi_k) + \ln \bpi_k) \\
+            &= -\sum_{i=1}^{N} \sum_{k=1}^{C} y_{ik} (\ln (\mathcal{N}(\boldx_i |  \bmu_k, \bSigma)) + \ln \bpi_k) \\
+            &= -\sum_{i=1}^{N} \sum_{k=1}^{C} y_{ik} (\ln (\frac{exp(-\frac{1}{2}(\boldx_i-\bmu_k)^T\bSigma^{-1}(\boldx_i-\bmu_k))}{\sqrt{\tau^k|\bSigma|}}) + \ln \bpi_k) \\
+            &= -\sum_{i=1}^{N} \sum_{k=1}^{C} y_{ik} (-\frac{1}{2}(\boldx_i-\bmu_k)^T\bSigma^{-1}(\boldx_i-\bmu_k)- \frac{1}{2}\ln(\tau^k|\bSigma|) + \ln \bpi_k) \\
+            \nabla f(\bmu_{k})&= \frac{\partial}{\partial \bmu_k}(-\sum_{i=1}^{N} \sum_{k=1}^{C} y_{ik} (-\frac{1}{2}(\boldx_i-\bmu_k)^T\bSigma^{-1}(\boldx_i-\bmu_k)- \frac{1}{2}\ln(\tau^k|\bSigma|) + \ln \bpi_k)) \\
+            &= -\sum_{i=1}^{N}  y_{ik}\frac{\partial}{\partial \bmu_k} (-\frac{1}{2}(\boldx_i-\bmu_k)^T\bSigma^{-1}(\boldx_i-\bmu_k)- \frac{1}{2}\ln(\tau^k|\bSigma|) + \ln \bpi_k) \\
+            &= \sum_{i=1}^{N}  (\frac{1}{2}y_{ik}\bSigma^{-1}\frac{\partial}{\partial \bmu_k}(\boldx_i-\bmu_k)^T(\boldx_i-\bmu_k)) \\
+            &= \sum_{i=1}^{N}   (\frac{1}{2}y_{ik}\bSigma^{-1}-2(\boldx_i+\bmu_k)) \\
+            &= \sum_{i=1}^{N}   (\frac{1}{2}y_{ik}\bSigma^{-1}-2\boldx_i-2\bmu_k)) \\
+            &= \sum_{i=1}^{N}   (y_{ik}\bSigma^{-1}(\boldx_i - \bmu_k)) \\
+        \end{split}
+    \end{equation}
+    \item
+    \begin{equation}
+        \begin{split}
+            0 &= \sum_{i=1}^{N}   (y_{ik}\bSigma^{-1}(\boldx_i - \bmu_k)) \\
+           0 &= \sum_{i=1}^{N}
+            (y_{ik}(\boldx_i- \bmu_k)) \\
+            0&= \sum_{i=1}^{N} (y_{ik}\boldx_i- y_{ik}\bmu_k) \\
+            0 &= \sum_{i=1}^{N} (y_{ik}\boldx_i- y_{ik}\bmu_k) \\
+            \sum_{i=1}^{N}y_{ik}\boldx_i &= \sum_{i=1}^{N} y_{ik}\bmu_k \\
+         \frac{\sum_{i=1}^{N}y_{ik}\boldx_i}{\sum_{i=1}^{N} y_{ik}} &= \bmu_k \\ \frac{1}{N_k}\sum_{i=1}^{N}y_{ik}\boldx_i &= \hat{\bmu_k} \\
+        \end{split}
+    \end{equation}
+    \item
+    \begin{equation}
+        \begin{split}
+            \nabla f(\bSigma)&= \frac{\partial}{\partial \bSigma}(-\sum_{i=1}^{N} \sum_{k=1}^{C} y_{ik} (-\frac{1}{2}(\boldx_i-\bmu_k)^T\bSigma^{-1}(\boldx_i-\bmu_k)- \frac{1}{2}\ln(\tau^k|\bSigma|) + \ln \bpi_k)) \\
+            &= -\sum_{i=1}^{N} \sum_{k=1}^{C} y_{ik}\frac{\partial}{\partial \bSigma} (-\frac{1}{2}(\boldx_i-\bmu_k)^T\bSigma^{-1}(\boldx_i-\bmu_k)- \frac{1}{2}\ln(\tau^k|\bSigma|) + \ln \bpi_k) \\
+            &= -\sum_{i=1}^{N} \sum_{k=1}^{C} y_{ik} (-\frac{1}{2}(_i-\bSigma^{-T}(\boldx_i-\bmu_k)(\boldx_i-\bmu_k)^T\bSigma^{-T}) - \bSigma^{-T})\\
+            &= -\frac{1}{2}\bSigma^{-T} \sum_{i=1}^{N} \sum_{k=1}^{C} y_{ik} -\frac{1}{2}\sum_{i=1}^{N} \sum_{k=1}^{C}(-\bSigma^{-T}(\boldx_i-\bmu_k)(\boldx_i-\bmu_k)^T\bSigma^{-T})\\
+            &= -\frac{n}{2}\bSigma^{-T} +\frac{1}{2}\sum_{i=1}^{N} \sum_{k=1}^{C}\bSigma^{-T}(\boldx_i-\bmu_k)(\boldx_i-\bmu_k)^T\bSigma^{-T}\\
+        \end{split}
+    \end{equation}
+    \item
+    \begin{equation}
+        \begin{split}
+            0 &= -\frac{n}{2}\bSigma^{-T} +\frac{1}{2}\sum_{i=1}^{N} \sum_{k=1}^{C}\bSigma^{-T}(\boldx_i-\bmu_k)(\boldx_i-\bmu_k)^T\bSigma^{-T}\\
+            n\bSigma^{-T} &=\sum_{i=1}^{N} \sum_{k=1}^{C}\bSigma^{-T}(\boldx_i-\bmu_k)(\boldx_i-\bmu_k)^T\bSigma^{-T}\\
+            n &=\sum_{i=1}^{N} \sum_{k=1}^{C}(\boldx_i-\bmu_k)(\boldx_i-\bmu_k)^T\bSigma^{-T}\\
+            n\bSigma^{T} &=\sum_{i=1}^{N} \sum_{k=1}^{C}(\boldx_i-\bmu_k)(\boldx_i-\bmu_k)^T\\
+            \bSigma &= \frac{\sum_{i=1}^{N} \sum_{k=1}^{C}(\boldx_i-\bmu_k)(\boldx_i-\bmu_k)^T}{n}\\
+        \end{split}
+    \end{equation}
+\end{enumerate}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Problem 3
@@ -306,8 +418,60 @@ values in \texttt{T2\_P3.py} for logistic regression.
 
 
 
-\subsection*{Solution}
+\subsection*{Solution}\\
+\begin{enumerate}
+    \item \\ \includegraphics[scale=0.6]{hw2/download (10).png}
+    \includegraphics[scale=0.6]{hw2/generative_result_shared_covariances.png}\\
+    \includegraphics[scale=0.6]{hw2/generative_result_separate_covariances.png}
+    \includegraphics[scale=0.6]{hw2/knn1_result.png}
+    \includegraphics[scale=0.6]{hw2/knn3_result.png}
+    \includegraphics[scale=0.6]{hw2/knn5_result.png}\\
+    
+    LR vs NB1: Both of these plots fit linear boundaries. The lines created classes that were of different shapes. This is because the LR is a frequentist approach that does not assume the data were generated from a specific distribution, while the NB assumes they were generated from a normal distribution and uses that in the prediction modeling. \\
+    
+    LR & NB1 vs NB2: These two plots are the most dissimilar from each other among the group. This is because the NB2 model assumes that the data in each class were generated from a normal distribution with a unique covariance matrix, which also explains why the boundaries fit so tightly around the training data. \\
+    
+    LR vs KNN: The LR and KNN models are all fairly similar, except for the curved boundary lines created by the KNN model. In a predicted value plot where each "pixel" is a testing data point, you would expect to see curved lines seperating classes because they represent the radial distance around each cluster of training data classes.
+    
+    KNN vs eachother: These plots all look fairly similar and seem to explain the observed data the best. The biggest difference is the smoothness of the boundary lines, which decreases as K increases. As we decrease K our predictions should become less stable, conversely as K increase, our predictions become should more stable because we are increasing the information we are taking in to make a prediction. That said, in this example, it seems that knn=1 is fitting our data the best, although I predict that with more testing data, this may no longer hold true. \\
 
+    
+    
+    \item \\
+    \includegraphics[scale=0.6]{hw2/Logistic Regression Loss.png} \\
+    A $\lambda = .00001$ yields good results when compared to a $\lambda >= .001$. This $\lambda$ works best for this model, but might not generalize if it causes our model to be overfit to the data. However, we don't have a test data set to compare our model and did not perform cross validation to understand if we are over/underfitting, so I choose this lambda given the data we have. 
+    
+    The $\eta$ I chose was .01. This seemed reasonable because it was small enough to ensure our descent wasn't jumping around the gradient rather than slowly creeping down the curve, yet big enough that we were able to optimize our parameters in a reasonable amount of time.
+    
+    With a higher $\lambda$, the loss after 10,000 iterations was higher than with a lower $\lambda$. With an $\eta = .1$ and $\eta=1$ the loss jumped around a lot before converging around 100 iterations. An $\eta = .00001$ converged at a much slower rate, which is to be expected because it is descending much more slowly on the gradient. \\
+    
+    \item \\ The negative log likeliehood of the shared covariance model was: 116.396
+    
+    The negative log likelhood of the seperate covariance model was: 100.7 \\
+    
+    The seperate covariance provides a better fitting model to the data, making the probabilities larger for the observed data.
+    
+    \item Test star type predictions for Separate Covariance Gaussian Model:\\
+magnitude 6 and temperature 2: 0\\
+
+Test star type predictions for Shared Covariance Gaussian Model:\\
+magnitude 6 and temperature 2: 1\\
+
+Test star type predictions for Linear Regression:\\
+magnitude 6 and temperature 2: 1\\
+
+Test star type predictions for KNN Model with k=1:\\
+magnitude 6 and temperature 2: 0\\
+
+Test star type predictions for KNN Model with k=3:\\
+magnitude 6 and temperature 2: 0\\
+
+Test star type predictions for KNN Model with k=5:\\
+magnitude 6 and temperature 2: 0\\
+
+None of these models give me any indication that I should trust their results because we have too few training data points to fit models that will generalize well. However, if we were to average the results of all of them, I believe the new star would be classified as a Dwarf star, which may be a slightly stronger estimation given that we are using information across multiple models to make a prediction. 
+
+\end{enumerate}
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Name and Calibration
@@ -317,9 +481,9 @@ values in \texttt{T2\_P3.py} for logistic regression.
 \subsection*{Collaborators and Resources}
 Whom did you work with, and did you use any resources beyond cs181-textbook and your notes?
 
+I attended many office hours and collaborated with other students at OH.
+
 \subsection*{Calibration}
-Approximately how long did this homework take you to complete (in hours)? 
-
-
-
+~20 hours 
+            
 \end{document}
