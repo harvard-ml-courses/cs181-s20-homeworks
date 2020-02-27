@@ -37,7 +37,7 @@ def tforward(X):
   return X
 
 tyhat = tforward(tX)
-L = (ty * tyhat.log()) + (1-ty) * (1 - tyhat).log()
+L = -((ty * tyhat.log()) + (1-ty) * (1 - tyhat).log())
 # the magic of autograd!
 L.sum().backward()
 

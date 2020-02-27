@@ -75,11 +75,11 @@ You can use a \textbf{maximum of 2 late days} on this assignment.  Late days wil
 \begin{enumerate}
 
 \item We are interested in the predictive distribution of a new datapoint $x^*$ given our observed data $D$, $p(x^*|D)$.
-  Write down the expression for the full posterior predictive distribution: $$p(x|D) = \int p(x|\mu)p(\mu|D) d\mu$$
+  Write down the expression for the full posterior predictive distribution: $$p(x^*|D) = \int p(x^*|\mu)p(\mu|D) d\mu$$
   
   There are two ways to do this problem. One involves actually doing out this integral, which has been well studied and there are resources that can guide you through it (http://www.tina-vision.net/docs/memos/2003-003.pdf). The second involves using the representation of $x$ and calculating the posterior of $\mu$.
   
- \item The full posterior predictive distribution is often difficult to calculate because we need to marginalize out the parameters (here, the parameter is $\mu$). We can mitigate this problem by plugging in a point estimate of $\mu$. Find the estimates of $p(x|D) \approx p(x|\mu^*)$ for $\mu^* = \mu_{MLE}$ and $\mu^* = \mu_{MAP}$.
+ \item The full posterior predictive distribution is often difficult to calculate because we need to marginalize out the parameters (here, the parameter is $\mu$). We can mitigate this problem by plugging in a point estimate of $\mu$. Find the estimates of $p(x^*|D) \approx p(x^*|\mu^*)$ for $\mu^* = \mu_{MLE}$ and $\mu^* = \mu_{MAP}$.
    
 \item Plot how the above 3 distributions change after each data point is
   gathered.  You will have a total of 15 plots (they can be small,
@@ -144,7 +144,7 @@ You can use a \textbf{maximum of 2 late days} on this assignment.  Late days wil
           
       and make sure they work with the mathematical operations described above. Examining shapes is one of the key ways to debug your code, and can be done using .shape after any numpy array.
       
-    \item  We will derive the gradient for each of the parameters before we implement backprop. For this question, assume there is only one datapoint $\bold{x}$, and that our loss is $L = y \log (\hat{y}) + (1 - y) \log (1 - \hat{y})$. For all questions, the chain rule will be useful.
+    \item  We will derive the gradient for each of the parameters before we implement backprop. For this question, assume there is only one datapoint $\bold{x}$, and that our loss is $L = -(y \log (\hat{y}) + (1 - y) \log (1 - \hat{y}))$. For all questions, the chain rule will be useful.
     \begin{enumerate}
         \item Find $\frac{\partial L}{\partial b_2}$. 
         
