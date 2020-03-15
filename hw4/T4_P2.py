@@ -5,9 +5,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # This line loads the images for you. Don't change it! 
-large_dataset = np.load("../data/large_dataset.npy")
-small_dataset = np.load("../data/small_dataset.npy")
-small_labels = np.load("../data/small_dataset_labels.npy").astype(int)
+large_dataset = np.load("data/large_dataset.npy")
+small_dataset = np.load("data/small_dataset.npy")
+small_labels = np.load("data/small_dataset_labels.npy").astype(int)
 
 # You are welcome to change anything below this line. This is just an example of how your code may look.
 # Keep in mind you may add more public methods for things like the visualization.
@@ -27,7 +27,7 @@ class KMeans(object):
         pass
 
 K = 10
-KMeansClassifier = KMeans(K=10, useKMeansPP=False)
+KMeansClassifier = KMeans(K=10)
 KMeansClassifier.fit(large_dataset)
 
 # This is how to plot an image. We ask that any images in your writeup be grayscale images, just as in this example.
