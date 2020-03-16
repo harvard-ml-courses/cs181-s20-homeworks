@@ -134,7 +134,7 @@ The code given in \texttt{T4\_P2.py} loads the images into your environment into
   the K-means objective function (the residual sum of squares) as a function of iterations and verify
   that it never increases.
 
-\item Run the K-means algorithm for 3 different restarts for different
+\item Run the K-means algorithm for 5 different restarts for different
   values of $K$, setting $K = 5, 10, 20$. Plot the final K-means objective value as a function
   of $K$ with error bars over the $5$ random restarts. To clarify, your
   x-axis will be $K$, your y-axis will be the average objective function value
@@ -146,18 +146,18 @@ The code given in \texttt{T4\_P2.py} loads the images into your environment into
   does the final value of the objective function and the standard deviation of the final
   value of the objective function change with $K$? (Note: Our code takes ~10 minutes to run for this Part)
   
-\item For $K=10$ and for 3 random restarts, show the mean
+\item For $K=10$ and for 5 random restarts, show the mean
   image (aka the centroid) for each cluster.
   To render an image, use the pyplot
-  \texttt{imshow} function. There should be 30 total images. Include all of these images
-  as part of a single plot (e.g. don't have 30 pages in your write-up with a
+  \texttt{imshow} function. There should be 50 total images. Include all of these images
+  as part of a single plot (e.g. don't have 50 pages in your write-up with a
   separate image on each page).
 
 \item Repeat Part 3, but first standardize the data. That is, center
   the data before running K-means on it, such that each pixel has mean 0 and variance 1 (except
   for any pixels that have zero variance, for these you can simply
-  divide by 1). For $K=10$ and 3 random restarts, show the mean image
-  (aka the centroid) for each cluster. There should be 30 total
+  divide by 1). For $K=10$ and 5 random restarts, show the mean image
+  (aka the centroid) for each cluster. There should be 50 total
   images. Again, include all of these images as part of a single plot.
   Compare these images to those from Part 3.
 
