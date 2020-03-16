@@ -3,6 +3,8 @@
 
 import numpy as np 
 import matplotlib.pyplot as plt
+from scipy.spatial import distance
+from seaborn import heatmap
 
 # This line loads the images for you. Don't change it! 
 large_dataset = np.load("data/large_dataset.npy")
