@@ -7,8 +7,8 @@ from scipy.spatial import distance
 from seaborn import heatmap
 
 # This line loads the images for you. Don't change it! 
-large_dataset = np.load("data/large_dataset.npy")
-small_dataset = np.load("data/small_dataset.npy")
+large_dataset = np.load("data/large_dataset.npy").astype(np.int64)
+small_dataset = np.load("data/small_dataset.npy").astype(np.int64)
 small_labels = np.load("data/small_dataset_labels.npy").astype(int)
 
 # You are welcome to change anything below this line. This is just an example of how your code may look.
