@@ -1,9 +1,8 @@
 \documentclass[submit]{harvardml}
 
-% FDV: Adjust dates 
 \course{CS181-S20}
 \assignment{Assignment \#5}
-\duedate{11:59pm April 10, 2020} % Adjust date
+\duedate{11:59pm April 10, 2020} 
 \newcommand{\attr}[1]{\textsf{#1}}
 \usepackage[OT1]{fontenc}
 \usepackage[colorlinks,citecolor=blue,urlcolor=blue]{hyperref}
@@ -48,14 +47,9 @@ Please submit the \textbf{writeup PDF to the Gradescope assignment `HW5'}. Remem
 
 Please submit your \textbf{\LaTeX\ file and code files to the Gradescope assignment `HW5 - Supplemental'}. 
 
-You can use a \textbf{maximum of 2 late days} on this assignment.  Late days will be counted based on the latest of your submissions. \\
+You can use a \textbf{maximum of 2 late days} on this assignment.  Late days will be counted based on the latest of your submissions. 
+\\
 
-
-% FDV: Changed to Beta-Geometric just to change things up, will need
-% to be re-written for that.  I think the math should all work out but
-% let me know if there is trouble (Geometric -> Negative Binomial,
-% should then be cleanly conjugate...) Also, thinking to add a coding
-% component -> would it make it too long?
 \begin{problem}[Expectation-Maximization for Categorical-Geometric Mixture Models, 25pts]
 
 In this problem we will explore expectation-maximization for a
@@ -130,10 +124,6 @@ Using the~$\boldq_n$ estimates from the Expectation Step, derive an update for m
   inverting the provided generative model (i.e. now you're predicting $z$ given $x$). Could you reuse any of
   your inference derivations above?
 
-  % FDV: Added this: let's see how hard it is and tweak the
-  % probabilities to get different effects (might be too tricky with
-  % geometrics, in which case we can make the question more about why
-  % it is tricky -> e.g. would adding a dimension help)
 \item Finally, implement your solution (see \texttt{T5\_P1.py} for starter code).  You are responsible for implementing the \texttt{loglikelihood}, \texttt{e\_step} and \texttt{m\_step} functions. Test it out with data given
   $10$ samples from $3$ components with $p_1 = .1$, $p_2=.5$, and
   $p_3=.9$.  How does it perform?  What if you increase the number of
@@ -151,7 +141,6 @@ Using the~$\boldq_n$ estimates from the Expectation Step, derive an update for m
 
 \newpage
 
-% FDV: This problem is the same as last year.
 \begin{problem}[PCA, 15 pts]
 
 For this problem you will implement PCA from scratch.  Using
@@ -201,11 +190,7 @@ to take up multiple pages.}
 
 \newpage
 
-  % FDV: From previous T5, Minor notation changes + changed the
-  % network.  Adjust the solutions for the new network with the new
-  % names.  Please check carefully.
-\section*{Bayesian Networks [10 pts]}
-\begin{problem}
+\begin{problem}[Bayesian Networks, 10 pts]
 
   \noindent In this problem we explore the conditional independence
   properties of a Bayesian Network.  Consider the following Bayesian
