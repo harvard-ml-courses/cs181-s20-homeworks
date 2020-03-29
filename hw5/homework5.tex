@@ -1,0 +1,283 @@
+\documentclass[submit]{harvardml}
+
+% FDV: Adjust dates 
+\course{CS181-S20}
+\assignment{Assignment \#5}
+\duedate{11:59pm April 10, 2020} % Adjust date
+\newcommand{\attr}[1]{\textsf{#1}}
+\usepackage[OT1]{fontenc}
+\usepackage[colorlinks,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage[pdftex]{graphicx}
+\usepackage{subfig}
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{todonotes}
+\usepackage{listings}
+\usepackage{common}
+\usepackage{bm}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usepackage{xifthen}
+\usepackage{soul}
+
+\usepackage[mmddyyyy,hhmmss]{datetime}
+
+\definecolor{verbgray}{gray}{0.9}
+
+\lstnewenvironment{csv}{
+  \lstset{backgroundcolor=\color{verbgray},
+  frame=single,
+  framerule=0pt,
+  basicstyle=\ttfamily,
+  columns=fullflexible}}{}
+
+\begin{document}
+\begin{center}
+{\Large Homework 5: Mixtures, EM, and Graphical Models}\\
+\end{center}
+
+This homework assignment will have you work with mixtures, EM, and
+graphical models.  
+
+Please type your solutions after the corresponding problems using this
+\LaTeX\ template, and start each problem on a new page.
+
+Please submit the \textbf{writeup PDF to the Gradescope assignment `HW5'}. Remember to assign pages for each question.
+
+Please submit your \textbf{\LaTeX\ file and code files to the Gradescope assignment `HW5 - Supplemental'}. 
+
+You can use a \textbf{maximum of 2 late days} on this assignment.  Late days will be counted based on the latest of your submissions. \\
+
+
+% FDV: Changed to Beta-Geometric just to change things up, will need
+% to be re-written for that.  I think the math should all work out but
+% let me know if there is trouble (Geometric -> Negative Binomial,
+% should then be cleanly conjugate...) Also, thinking to add a coding
+% component -> would it make it too long?
+\begin{problem}[Expectation-Maximization for Categorical-Geometric Mixture Models, 25pts]
+
+In this problem we will explore expectation-maximization for a
+Categorical-Geometric Mixture model.  Each observation $\boldx_n$ is a
+non-negative integer scalar drawn from a geometric distribution
+(associated with the number of failures needed to get to the first
+success, if success occurs with probability $p$).  We posit that each
+observation comes from \emph{one} mixture component.  For this
+problem, we will assume there are $K$~components. Each component $k
+\in \{1, \ldots, K\}$ will be associated with a probability $p_k \in
+    [0,1]$.  Finally let the (unknown) overall mixing proportion of
+    the components be~$\btheta \in [0,1]^K$, where~${\sum_{k=1}^K
+      \btheta_k=1}$.
+
+Our generative model is that each of the~$N$ observations comes from a
+single component.  We encode observation $n$'s component-assignment as
+a one-hot vector~${\boldz_n \in \{0,1\}^K}$ over components. This
+one-hot vector is drawn from~$\btheta$; then, $\boldx_n$ is drawn
+from~$\text{Geometric}(p_k )$ where $\boldx_n$ belongs to class $k$.
+
+Formally, data are generated in two steps (assuming $\boldz_n$ encodes
+the class $k$), where we define the PMF of the geometric distribution to be $p(x_n | p_k) = (1 - p_k)^{x_n - 1} p_k$:
+\begin{eqnarray*}
+ \boldz_n &\sim& \text{Categorical}(\btheta) \\
+ \boldx_n &\sim& \text{Geometric}(p_k )
+\end{eqnarray*}
+
+  \begin{enumerate}
+
+  \item \textbf{Intractability of the Data Likelihood} We are
+    generally interested in finding a set of parameters $p_k$ that
+    maximize the data likelihood $\log
+    p(\{\boldx_n\}^N_{n=1}|\{p_k\}^K_{k = 1})$.  Expand the data
+    likelihood to include the necessary sums over observations
+    $\boldx_n$ and latents $\boldz_n$.  Why is optimizing this loss
+    directly intractable?
+
+\item \textbf{Complete-Data Log Likelihood} Define the complete data
+  for this problem to be $D = \{(\boldx_n, \boldz_n)\}_{n=1}^N$. Write
+  out the complete-data negative log likelihood. Note that optimizing
+  this loss is now computationally tractable if we know $\boldz_n$.
+
+\[\mcL(\btheta, \{p_k\}^K_{k=1}) =  -\ln p(D \given\btheta, \{p_k\}^K_{k=1}).\]
+
+
+\item \textbf{Expectation Step} Our next step is to introduce a
+  mathematical expression for $\boldq_n$, the posterior over the
+  hidden topic variables~$\boldz_n$ conditioned on the observed data
+  $\boldx_n$ with fixed parameters, i.e $p(\boldz_n | \boldx_n;
+  \btheta, \{ p_k \}^K_{k=1})$.
+
+\begin{itemize}
+\item  \textbf{Part 3.A } Write down and simplify the expression for $\boldq_n$.
+\item  \textbf{Part 3.B } Give an algorithm for calculating the expression for $\boldq_n$ found in Part 3.A for all $n$, given the observed data~$\{\boldx_n\}^N_{n=1}$ and settings of the parameters~$\btheta$ and~$\{ p_k\}^K_{k=1}$.
+
+\end{itemize}
+
+\item \textbf{Maximization Step}
+Using the~$\boldq_n$ estimates from the Expectation Step, derive an update for maximizing the expected complete data log likelihood in terms of~$\btheta$ and~$\{ p_k \}^K_{k=1}$.
+
+\begin{itemize}
+    \item \textbf{Part 4.A } Derive an expression for the expected complete-data log likelihood using $\boldq_n$.
+    \item \textbf{Part 4.B } Find an expression for $\btheta$ that maximizes this expected complete-data log likelihood. You may find it helpful to use Lagrange multipliers in order to enforce the constraint $\sum \theta_k = 1$. Why does this optimized $\btheta$ make intuitive sense?
+    \item \textbf{Part 4.C } Apply a similar argument to find the
+      values of $\{p_k \}^K_{k = 1}$ that maximizes the expected
+      complete-data log likelihood.
+\end{itemize}
+
+\item Suppose that this had been a classification problem. That is,
+  you were provided the ``true'' categories $\boldz_n$ for each observation $\boldx_n$,
+  and you were going to perform the classification by
+  inverting the provided generative model (i.e. now you're predicting $z$ given $x$). Could you reuse any of
+  your inference derivations above?
+
+  % FDV: Added this: let's see how hard it is and tweak the
+  % probabilities to get different effects (might be too tricky with
+  % geometrics, in which case we can make the question more about why
+  % it is tricky -> e.g. would adding a dimension help)
+\item Finally, implement your solution (see \texttt{T5\_P1.py} for starter code).  You are responsible for implementing the \texttt{loglikelihood}, \texttt{e\_step} and \texttt{m\_step} functions. Test it out with data given
+  $10$ samples from $3$ components with $p_1 = .1$, $p_2=.5$, and
+  $p_3=.9$.  How does it perform?  What if you increase the number of
+  samples to $1000$ from each of the components?  What if you change
+  $p_2=.2$?  Hypothesize reasons for the differences in performance
+  when you make these changes. You may need to record five to ten trials (random restarts) in order to observe meaningful insights.
+
+\end{enumerate}
+
+
+
+\end{problem}
+
+\subsection*{Solution}
+
+\newpage
+
+% FDV: This problem is the same as last year.
+\begin{problem}[PCA, 15 pts]
+
+For this problem you will implement PCA from scratch.  Using
+\texttt{numpy} to call SVDs is fine, but don't use a third-party
+machine learning implementation like \texttt{scikit-learn}.
+
+We return to the MNIST data set from T4. You have been given
+representations of 6000 MNIST images, each of which are $28\times28$
+greyscale handwritten digits. Your job is to apply PCA on MNIST, and
+discuss what kinds of structure is found.
+
+As before, the given code in \texttt{T5\_P3.py} loads the images into your environment as a
+6000x28x28 array.
+
+\begin{enumerate}
+
+\item Compute the PCA. Plot the eigenvalues corresponding to the most significant 500
+  components in order from most significant to least. Make another plot that describes the cumulative proportion of variance explained by the first $k$ most significant components for values of $k$ from 1 through 500.
+  How much variance is explained by the first 500 components?  Describe
+  how the cumulative proportion of variance explained changes with $k$.
+
+\item Plot the mean image as well as the images corresponding to the
+  first 10 principle components.  How do the images compare to the
+  cluster centers from K-means? Discuss any similarities and
+  differences.
+
+\item Compute the reconstruction error on the data set using the mean
+  image. Then compute the reconstruction error using the first 10 principal components. How do these
+  errors compare to the final objective loss achieved by using K-means on the dataset? Discuss any similarities and
+  differences.
+
+\end{enumerate}
+
+
+\textit{Include your plots in your PDF. There may be several plots for this problem, so feel free
+to take up multiple pages.}
+
+
+
+
+
+
+\end{problem}
+
+
+\subsection*{Solution}
+
+\newpage
+
+  % FDV: From previous T5, Minor notation changes + changed the
+  % network.  Adjust the solutions for the new network with the new
+  % names.  Please check carefully.
+\section*{Bayesian Networks [10 pts]}
+\begin{problem}
+
+  \noindent In this problem we explore the conditional independence
+  properties of a Bayesian Network.  Consider the following Bayesian
+  network representing a fictious person's activities. Each random
+  variable is binary (true/false).
+
+\begin{center}
+\includegraphics[width=3in]{bn.png}
+\end{center}
+
+The random variables are:
+
+\begin{itemize}
+\item \attr{Weekend}: Is it the weekend?
+\item \attr{Friends over}: Does the person have friends over?
+\item \attr{Traveling}: Is the person traveling?
+\item \attr{Sick}: Is the person sick?
+\item \attr{Eat exotic foods}: Is the person eating exotic foods?
+\item \attr{Get Sleep}: Is the person getting sleep?
+\end{itemize}
+
+\medskip
+
+For the following questions, $A \perp B$ means that events A and B are
+independent and $A \perp B | C$ means that events A and B are independent
+conditioned on C.
+
+\textbf{Use the concept of d-separation} to answer the
+questions and show your work (i.e., state what the blocking path(s) is/are and what nodes block the path; or explain why each path is not blocked).
+
+
+\begin{enumerate}
+\item Is $\attr{Sick} \perp \attr{Weekend}$?
+  If NO, give intuition for why.
+
+
+\item Is $\attr{Sick} \perp \attr{Friends over}\given \attr{Eat exotic
+  foods}$? If NO, give intuition for why.
+
+
+\item Is $\attr{Friends over} \perp \attr{Get Sleep}$? If NO, give
+  intuition for why.
+
+\item Is $\attr{Friends over} \perp \attr{Get Sleep} \given
+  \attr{Traveling}$? If NO, give intuition for why.
+
+\item Suppose the person stops traveling in ways that affect their
+  sleep patterns (as various famous people have done).  Travel still
+  affects whether they eat exotic foods.  Draw the modified network.
+
+\item For this modified network, is $\attr{Friends over} \perp
+  \attr{Get Sleep}$? If NO, give an intuition why.  If YES,
+  describe what observations (if any) would cause them to no longer be
+  independent.
+
+\end{enumerate}
+\end{problem}
+
+
+\section*{Solution}
+
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Name and Calibration
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Name}
+
+\subsection*{Collaborators and Resources}
+Whom did you work with, and did you use any resources beyond cs181-textbook and your notes?
+
+\subsection*{Calibration}
+Approximately how long did this homework take you to complete (in hours)? 
+
+\end{document}
