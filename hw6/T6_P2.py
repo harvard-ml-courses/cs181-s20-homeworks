@@ -281,7 +281,7 @@ def learn_strategy(planning_type= VALUE_ITER, max_iter = 10, print_every = 5, ct
             n_iter += 1
             V_prev = V.copy()
 
-            # update the
+            # update V and pi
             if planning_type == VALUE_ITER:
                 V, pi = update_value_iteration(V, pi, gamma)
 
@@ -294,7 +294,7 @@ def learn_strategy(planning_type= VALUE_ITER, max_iter = 10, print_every = 5, ct
                 if ct:
                     # calculate the difference between this V and the previous V
                     diff = np.absolute(np.subtract(V, V_prev))
-                    # check that every component is less than 1
+                    # check that every component is less than ct
                     i = 0
                     while(i < state_count and diff[i] < ct):
                         i += 1
