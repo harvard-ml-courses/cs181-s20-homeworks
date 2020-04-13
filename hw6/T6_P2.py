@@ -219,7 +219,7 @@ def print_grid_representations():
 
 def policy_evaluation(pi, gamma, theta = 0.1):
     """
-    Returns matrix V containing the policy evaluation of policy pi.
+    Returns array V containing the policy evaluation of policy pi.
     Implement policy evaluation using discount factor gamma and
     convergence tolerance theta.
 
@@ -249,7 +249,7 @@ def update_policy_iteration(V, pi, gamma, theta = 0.1):
 
 def update_value_iteration(V, pi, gamma):
     """
-    Update V and pi using value iteration.
+    Return updated V_new and pi_new using value iteration.
     V represents the learned value function at each state.
     pi represents the learned policy at each state.
 
