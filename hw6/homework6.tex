@@ -1,6 +1,5 @@
 \documentclass[submit]{harvardml}
 
-% FDV: Update dates 
 \course{CS181-S20}
 \assignment{Assignment \#6}
 \duedate{11:59pm April 26, 2020}
@@ -87,7 +86,7 @@ You can use a \textbf{maximum of 2 late days} on this assignment.  Late days wil
     p(g = 1 | r = 1 , s = 1 ) &= 1
   \end{eqnarray*}
   
-  Note that before attempting the problems below, it may be helpful to first prove
+  Assume that the table fully defines the joint distribution of $s$, $r$, and $g$. Note that before attempting the problems below, it may be helpful to first prove
   something about the independence/dependence relationships between $r$, $g$, and $s$
   based on the information above.
 
@@ -96,6 +95,8 @@ You can use a \textbf{maximum of 2 late days} on this assignment.  Late days wil
       the grass. What is the probability that it is on?
     \item You notice it is raining and check on the sprinkler without
       checking the grass.  What is the probability that it is on?
+      
+      Please justify any assumptions of independence.  You may justify any such claims by drawing a Bayes Net of the joint distribution and reasoning about independence, or by describing the factorization of the joint distribution.
     \item You notice that the grass is wet and go to check on the
       sprinkler (without checking if it is raining).  What is the
       probability that it is on?
