@@ -124,12 +124,16 @@ def get_reward(state, action):
     state is a flattened state.
     action represents an index into the actions array.
 
-    Returns the expected reward of taking action from starting-state state.
+    Returns the reward from taking an action (deterministically, with
+    no probability of failure) from state.
     """
-    expected_reward = 0.
-    for s_prime in range(state_count):
-        expected_reward += get_transition_prob(state, action, s_prime) * task.rewards.get(task.maze.get_flat(state))
-    return expected_reward
+
+    new_state = task.move(task.maze.unflatten_index(state), action)
+    if task.is_wall(new_state):
+        # If the (state, action) pair is a wall, return the reward
+        # at the present state.
+        return task.rewards.get(task.maze.get_flat(state))
+    return task.rewards.get(task.maze.get_flat(state), action)
 
 def is_wall(state):
     """
