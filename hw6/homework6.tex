@@ -1,6 +1,5 @@
 \documentclass[submit]{harvardml}
 
-% FDV: Update dates 
 \course{CS181-S20}
 \assignment{Assignment \#6}
 \duedate{11:59pm April 26, 2020}
@@ -87,15 +86,16 @@ You can use a \textbf{maximum of 2 late days} on this assignment.  Late days wil
     p(g = 1 | r = 1 , s = 1 ) &= 1
   \end{eqnarray*}
   
-  Note that before attempting the problems below, it may be helpful to first prove
-  something about the independence/dependence relationships between $r$, $g$, and $s$
-  based on the information above.
+  Assume that the table fully defines the joint distribution of $s$, $r$, and $g$: 
+  $$p(s, r, g) = p(s) p(r) p(g | r, s)$$
 
   \begin{enumerate}
     \item You check on the sprinkler without checking on the rain or
       the grass. What is the probability that it is on?
     \item You notice it is raining and check on the sprinkler without
       checking the grass.  What is the probability that it is on?
+      
+      Please justify any assumptions of independence.  You may justify any such claims by drawing a Bayes Net of the joint distribution and reasoning about independence, or by describing the factorization of the joint distribution.
     \item You notice that the grass is wet and go to check on the
       sprinkler (without checking if it is raining).  What is the
       probability that it is on?
@@ -118,6 +118,8 @@ This question asks you to implement policy and value iteration in a simple envir
 \end{center}
 
 The set of all actions is \{N, S, E, W\}, which corresponds to moving north (up), south (down), east (right), and west (left) on the grid.  Taking an action in Gridworld does not always succeed with probability $1$; instead the agent has probability $0.1$ of ``slipping'' into a state on either side.  For example, if the agent tries to go up, the agent may end up going to the left or to the right by mistake, but never down.  Moving into a wall (off the edge of the grid) also will keep the agent in the same state with high probability, but the agent may end up slipping to a state on either side (defined as before) with probability 0.1.  Let discount factor $\gamma = 0.75$.
+
+Assume that rewards are received when exiting a state.  For example, \texttt{get\_reward(s, a)} when state $s$ is the bottom right corner incurs a reward of 50 for all actions $a$.
 
 Code used to represent the grid is in \texttt{gridworld.py}.  Your job is to implement the below methods in file \texttt{T6\_P2.py}. \textbf{You do not need to modify or call any function in the \texttt{gridworld.py} file to complete this question.  Please use the helper functions in \texttt{T6\_P2.py} to implement your solution.}
 

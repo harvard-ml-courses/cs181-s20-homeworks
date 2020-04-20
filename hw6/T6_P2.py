@@ -124,16 +124,10 @@ def get_reward(state, action):
     state is a flattened state.
     action represents an index into the actions array.
 
-    Returns the reward from taking an action (deterministically, with
-    no probability of failure) from state.
+    Returns the reward from exiting the state.
+    The reward only depends on the given state that the agent is leaving.
     """
-
-    new_state = task.move(task.maze.unflatten_index(state), action)
-    if task.is_wall(new_state):
-        # If the (state, action) pair is a wall, return the reward
-        # at the present state.
-        return task.rewards.get(task.maze.get_flat(state))
-    return task.rewards.get(task.maze.get_flat(state), action)
+    return task.rewards.get(task.maze.get_flat(state))
 
 def is_wall(state):
     """
@@ -152,21 +146,6 @@ def get_transition_prob(state1, action1, state2):
     Returns p(state2 | state1, action1).
     """
     return task.get_transition_prob(state1, action1, state2)
-
-def move(state, action):
-    """
-    state is a flattened state.
-    action represents an index into the actions array.
-
-    Returns the flattened index of the state resulting from moving
-    in direction action from state.
-    Returns -1 if the action is hitting a wall.
-    """
-    (x, y) = task.move(task.maze.unflatten_index(state), action)
-    if x < 0 or y < 0 or x >= row_count or y >= col_count:
-        return -1
-    else:
-        return task.maze.flatten_index((x, y))
 
 #############################################################
 #          TO-DOS FOR PROBLEM 2                             #
